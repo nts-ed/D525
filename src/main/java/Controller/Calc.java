@@ -27,6 +27,7 @@ public class Calc extends HttpServlet {
 		final int NUMCOUNT=2,MIN=50,MAX=99;
 		ServletContext application=this.getServletContext();
 		Stat stat=(Stat)application.getAttribute("stat");
+		
 		if(stat==null) {
 			stat=new Stat();
 		}
@@ -37,19 +38,23 @@ public class Calc extends HttpServlet {
 		logic.create(qs,NUMCOUNT,MIN,MAX);
 		HttpSession session=request.getSession();
 		session.setAttribute("qs",qs);
+		
 		RequestDispatcher rd=request.getRequestDispatcher("/WEB-INF/view/index.jsp");
 		rd.forward(request, response);
 	}
 
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String ans=(String)request.getParameter("ans");
 		HttpSession session=request.getSession();
 		Qs qs=(Qs)session.getAttribute("qs");
 		QsLogic logic=new QsLogic();
 		logic.result(qs,ans);
+		
 		ServletContext application=this.getServletContext();
 		Stat stat=(Stat)application.getAttribute("stat");
 		StatLogic statLogic=new StatLogic();
+		
 		if(qs.isCorrect()) {
 			statLogic.correctPlus(stat);
 		}else {
